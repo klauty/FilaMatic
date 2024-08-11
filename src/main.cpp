@@ -59,7 +59,7 @@ double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
 //double Kp=1, Ki=0.05, Kd=0.25;
-double Kp=2, Ki=5, Kd=1;
+double Kp=1, Ki=1, Kd=10;
 PID myPID(&temp, &Output, &targetTemp, Kp, Ki, Kd, DIRECT);
 
 void setup()
@@ -136,6 +136,7 @@ void updateScreen(){
 void loop()
 {
   temp =  thermistor->readCelsius();//getTemp(analogAverage(THERMISTOR,1));
+  temp = temp < 0 ? MAX_TEMP:temp;
   targetTemp = map(analogAverage(POT_TEMP,1),0,1024,60,MAX_TEMP);
   updateScreen();
  
@@ -170,7 +171,7 @@ void loop()
     }
     //analogWrite(HEATER,map(analogRead(POT_TEMP),0,1024,0,255));
     myPID.Compute();
-    analogWrite(HEATER, Output);
+    analogWrite(HEATER, Output/2);
   }else{
     analogWrite(HEATER,0);
     pwmVal = 0;
