@@ -36,7 +36,7 @@ Thermistor* thermistor;
 LiquidCrystal_I2C lcd(0x27,16,2);
 double targetTemp = 0;
 double temp = 0;
-int motorVel = 0;
+int motorVel = -700;
 int potTemp = 0;
 unsigned long deltaTela = 0;
 unsigned long deltaPID = 0;
@@ -49,7 +49,7 @@ double Kp=1, Ki=0.01, Kd=0.25;
 PID myPID(&temp, &Output, &targetTemp, Kp, Ki, Kd, DIRECT);
 
 // Define a stepper and the pins it will use
-AccelStepper stepper(AccelStepper::DRIVER, MOTOR_STEP, MOTOR_DIR); // Defaults to AccelStepper::FULL4WIRE (4 pins) on 2, 3, 4, 5
+AccelStepper stepper(AccelStepper::DRIVER, MOTOR_STEP, MOTOR_DIR);
 
 void setup()
 {
@@ -81,14 +81,14 @@ void setup()
 
 }
 
-void updateScreen(){
-  if(millis() - deltaTela > 500){
+void updateScreenFull(){
+  if(millis() - deltaTela > 300){
     lcd.setCursor(0,0);
     lcd.print("T:");
     lcd.print(toggleHeater?"1:":"0:");
-    lcd.print(int(targetTemp));
+    lcd.print(targetTemp,1);
     lcd.print("/");
-    lcd.print(int(temp));
+    lcd.print(temp,1);
     lcd.print("  ");
     lcd.setCursor(0,1);                                                                                                                                
     lcd.print("M:");
@@ -101,20 +101,32 @@ void updateScreen(){
   }
 }
 
+void updateScreen(){
+  if(millis() - deltaTela > 1000){
+    lcd.setCursor(0,0);
+    lcd.print(targetTemp,0);
+    lcd.print("/");
+    lcd.print(temp,0);
+    deltaTela = millis();
+
+  }
+}
+
 void loop(){
   
   temp =  thermistor->readCelsius();
   temp = temp < 0 ? MAX_TEMP:temp;
 
   targetTemp = map(analogRead(POT_TEMP),0,1024,60,MAX_TEMP);
-  motorVel = map(analogRead(POT_VEL),0,1024,16,800);
-  updateScreen();
+  motorVel = map(analogRead(POT_VEL),0,1024,16,1000);
+  
   stepper.setSpeed(-motorVel);
  
   //verificando botao de ativacao do motor
   if(!digitalRead(BTN_MOTOR) && !toggleMotor){
     toggleMotor = true;
     digitalWrite(MOTOR_ENABLE,LOW);
+    lcd.clear();
     delay(500);
   }
 
@@ -145,6 +157,9 @@ void loop(){
   if(toggleMotor){
     // ligar motor de passo
     stepper.runSpeed();
+    updateScreen();
+  }else{
+    updateScreenFull();
   }
 
 }
