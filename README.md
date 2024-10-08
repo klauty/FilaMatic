@@ -7,11 +7,11 @@ O projeto foi criado utilisando o plugin PlatformIo do vscode com a placa arduin
 
 A referência sobre a montagem e peças para impressão 3d podem ser visualizadas no [link](https://cad.onshape.com/documents/5d91a331e0951ebf56f2ed7f/w/54485c1ac82f9b8ec9bbee3b/e/b9478f63aa2d556822cc66c6?renderMode=0&uiState=670570a1162fc00b95a82c7f)
 
-Os arquivos para a impressao estao diaponiveil na pasta STL.
+Os arquivos para a impressão estão disponíveis na pasta STL.
 
 ![assembly render](./img/Render_maquina.png "Fila Matic")
 
-O processo inicial para a preparação das garrafas e fabricão do cortador pode ser acompanhado nesse [tutorial](https://youtu.be/a3Dar6amuzY?si=LlGIv6SwKXRhQAfx) do exelente canal [Creatividad Y Reparación](https://www.youtube.com/c/CreatividadYReparaci%C3%B3n).
+O processo inicial para a preparação das garrafas e fabricação do cortador pode ser encontrado nesse [tutorial](https://youtu.be/a3Dar6amuzY?si=LlGIv6SwKXRhQAfx) do canal [Creatividad Y Reparación](https://www.youtube.com/c/CreatividadYReparaci%C3%B3n).
 
 ## To-Do
 
