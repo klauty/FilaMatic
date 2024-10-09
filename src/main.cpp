@@ -13,11 +13,6 @@
 
 #define HEATER 10
 
-#define THERMISTORNOMINAL 100000      
-#define TEMPERATURENOMINAL 25   
-#define BCOEFFICIENT 3799
-#define SERIESRESISTOR 100000    
-
 #define SENSOR_PIN             A3
 #define REFERENCE_RESISTANCE   100000
 #define NOMINAL_RESISTANCE     100000
@@ -44,16 +39,16 @@ unsigned long deltaPID = 0;
 bool toggleMotor = false;
 bool toggleHeater = false;
 
-double Setpoint, Input, Output;
+double input, output;
 double Kp=1, Ki=0.01, Kd=0.25;
-PID myPID(&temp, &Output, &targetTemp, Kp, Ki, Kd, DIRECT);
+PID myPID(&temp, &output, &targetTemp, Kp, Ki, Kd, DIRECT);
 
-// Define a stepper and the pins it will use
+// Definição dos pinos utilizados pelo motor de passo 
 AccelStepper stepper(AccelStepper::DRIVER, MOTOR_STEP, MOTOR_DIR);
 
 void setup()
 {
-  //turn the PID on
+  //liga controle PID
   myPID.SetMode(AUTOMATIC);
 
   thermistor = new NTC_Thermistor(
@@ -122,7 +117,7 @@ void loop(){
   
   stepper.setSpeed(-motorVel);
  
-  //verificando botao de ativacao do motor
+  //verificando botão de ativação do motor
   if(!digitalRead(BTN_MOTOR) && !toggleMotor){
     toggleMotor = true;
     digitalWrite(MOTOR_ENABLE,LOW);
@@ -136,7 +131,7 @@ void loop(){
     delay(500);
   }
 
-  //verificando botao de ativacao do aquecedor
+  //verificando botão de ativação do aquecedor
   if(!digitalRead(BTN_TEMP) && !toggleHeater){
     toggleHeater = true;
     delay(500);
@@ -149,7 +144,7 @@ void loop(){
 
   if(toggleHeater){
     myPID.Compute();
-    analogWrite(HEATER,Output);
+    analogWrite(HEATER,output);
   }else{
     analogWrite(HEATER,0);
   }
